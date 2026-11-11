@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +17,11 @@
             --radius: 16px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
@@ -56,11 +61,20 @@
         }
 
         .btn-wa:hover,
-        .penjual button:hover { background: var(--wa-dark); }
+        .penjual button:hover {
+            background: var(--wa-dark);
+        }
+
         .btn-wa:active,
-        .penjual button:active { transform: scale(.98); }
+        .penjual button:active {
+            transform: scale(.98);
+        }
+
         .btn-wa:focus-visible,
-        .penjual button:focus-visible { outline: 3px solid #86efac; outline-offset: 2px; }
+        .penjual button:focus-visible {
+            outline: 3px solid #86efac;
+            outline-offset: 2px;
+        }
 
         /* Ikon profil (tanda sudah login) */
         .profile {
@@ -77,7 +91,10 @@
             flex-shrink: 0;
         }
 
-        .profile svg { width: 26px; height: 26px; }
+        .profile svg {
+            width: 26px;
+            height: 26px;
+        }
 
         /* titik hijau = status login */
         .profile::after {
@@ -138,7 +155,9 @@
             align-self: end;
         }
 
-        .penjual h1 br { display: none; }
+        .penjual h1 br {
+            display: none;
+        }
 
         .penjual p {
             font-size: 14px;
@@ -168,11 +187,17 @@
         }
 
         @media (min-width: 640px) {
-            body { padding: 32px 16px; }
-            iframe { height: 450px; }
+            body {
+                padding: 32px 16px;
+            }
+
+            iframe {
+                height: 450px;
+            }
         }
     </style>
 </head>
+
 <body>
     <!-- Top bar -->
     <div class="topbar">
@@ -180,7 +205,7 @@
 
         <div class="profile" title="Kamu sudah login" role="img" aria-label="Sudah login">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4.42 0-8 2.24-8 5v1a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1c0-2.76-3.58-5-8-5z"/>
+                <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4.42 0-8 2.24-8 5v1a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1c0-2.76-3.58-5-8-5z" />
             </svg>
         </div>
     </div>
@@ -201,66 +226,80 @@
 
     </div>
 </body>
+
 </html>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-    <script>
-        let map = null
-        let marker = null
-        document.getElementById('syncLocation').addEventListener('click', function() {
-            const statusText = document.getElementById('statusLocation')
-            statusText.textContent = "Mencari lokasi"
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+    let map = null
+    let marker = null
+    document.getElementById('syncLocation').addEventListener('click', function() {
+        const statusText = document.getElementById('statusLocation')
+        statusText.textContent = "Mencari lokasi"
 
-            if (!navigator.geolocation) {
-                statusText.textContent = "Browser Tidak mengizinkan lokasi, silahkan aktifkan terlebih dahulu"
-            }
-            navigator.geolocation.getCurrentPosition(function(position) {
-                const lat = position.coords.latitude
-                const lng = position.coords.longitude
+        if (!navigator.geolocation) {
+            statusText.textContent = "Browser Tidak mengizinkan lokasi, silahkan aktifkan terlebih dahulu"
+        }
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude
+            const lng = position.coords.longitude
 
-                statusText.textContent = `Lokasi didapat latitude: ${lat}, longitude: ${lng}`
+            statusText.textContent = `Lokasi didapat latitude: ${lat}, longitude: ${lng}`
 
-                setTimeout(() => {
+            setTimeout(() => {
 
-                    fetch('<?php echo site_url("pembeli/syncLocation") ?>', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            },
-                            body: `lat=${lat}&lng=${lng}`
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-    
-                                statusText.textContent = "Lokasi Berhasil diperbarui"
-                                if (map == null) {
-                                    map = L.map("mapContainer").setView([lat, lng], 16);
-    
-                                    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-                                        maxZoom: 23,
-                                        attribution: "Tes",
-                                    }).addTo(map);
-                                    marker = L.marker([lat, lng]).addTo(map)
-                                } else {
-                                    map.setView([lat, lng], 16)
-                                    marker.setLatLng([lat, lng])
-                                }
-                                setTimeout(() => { map.invalidateSize(); }, 100);
+                fetch('<?php echo site_url("pembeli/syncLocation") ?>', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: `lat=${lat}&lng=${lng}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+
+                            statusText.textContent = "Lokasi Berhasil diperbarui"
+                            if (map == null) {
+                                map = L.map("mapContainer").setView([lat, lng], 16);
+
+                                L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                                    maxZoom: 23,
+                                }).addTo(map);
+                                marker = L.marker([lat, lng]).addTo(map)
+                                L.circle([lat, lng], {
+                                    color: 'red',
+                                    fillColor: 'gray',
+                                    fillOpacity: 0.5,
+                                    radius: 500
+                                }).addTo(map)
                             } else {
-                                alert(`Gagal ${data.message}`)
+                                map.setView([lat, lng], 16)
+                                marker.setLatLng([lat, lng])
+                                L.circle([lat, lng], {
+                                    color: 'red',
+                                    fillColor: 'gray',
+                                    fillOpacity: 0.5,
+                                    radius: 500
+                                }).addTo(map)
                             }
-                        })
-                        .catch(error => {
-                            statusText.textContent = `Terjadi Kesalahan ${error}`
-                        })
-                }, 5000)
-            })
+                            setTimeout(() => {
+                                map.invalidateSize();
+                            }, 100);
+                        } else {
+                            alert(`Gagal ${data.message}`)
+                        }
+                    })
+                    .catch(error => {
+                        statusText.textContent = `Terjadi Kesalahan ${error}`
+                    })
+            }, 5000)
         })
-    </script>   
+    })
+</script>
 
-    
+
 </body>
 
 </html>
