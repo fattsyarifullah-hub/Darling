@@ -24,7 +24,7 @@
 
       <form action="<?php echo site_url('Pembeli/register') ?>" method="POST">
         <div class="input-group mb-3">
-          <input type="text" name="name" class="form-control" placeholder="Nama lengkap" required value="<?php echo set_value('name') ?>">
+          <input type="text" name="name" class="form-control" placeholder="Nama lengkap" value="<?php echo set_value('name') ?>">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>
@@ -33,7 +33,7 @@
         </div>
         <?php echo form_error('name','<small class="text-danger">', '</small>') ?>
         <div class="input-group mb-3">
-          <input type="email" name="email" class="form-control" placeholder="Email" required value="<?php echo set_value('email') ?>">
+          <input type="email" name="email" class="form-control" placeholder="Email" value="<?php echo set_value('email') ?>">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -42,7 +42,7 @@
         </div>
         <?php echo form_error('email','<small class="text-danger">', '</small>') ?>
         <div class="input-group mb-3">
-          <input type="number" name="no_hp" class="form-control" placeholder="Nomor HP" required value="<?php echo set_value('no_hp') ?>">
+          <input type="number" name="no_hp" class="form-control" placeholder="Nomor HP" value="<?php echo set_value('no_hp') ?>">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -51,7 +51,7 @@
         </div>
         <?php echo form_error('no_hp','<small class="text-danger">', '</small>') ?>
         <div class="input-group mb-3">
-          <input type="password" name="password" class="form-control" placeholder="Password" required value="<?php echo set_value('password') ?>">
+          <input type="password" name="password" class="form-control" placeholder="Password" value="<?php echo set_value('password') ?>">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>

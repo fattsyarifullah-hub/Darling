@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Halaman Penjual</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
         :root {
             --bg: #f4f6f8;
@@ -219,38 +220,42 @@
 
                 statusText.textContent = `Lokasi didapat latitude: ${lat}, longitude: ${lng}`
 
-                fetch('<?php echo site_url("pembeli/syncLocation") ?>', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: `latitude=${lat}&longitude=${lng}`
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
+                setTimeout(() => {
 
-                            statusText.textContent = "Lokasi Berhasil diperbarui"
-                            if (map == null) {
-                                map = L.map("mapContainer").setView([lat, lng], 16);
-
-                                L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-                                    maxZoom: 23,
-                                    attribution: "Tes",
-                                }).addTo(map);
-                                marker = L.marker([lat, lng]).addTo(map)
+                    fetch('<?php echo site_url("pembeli/syncLocation") ?>', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: `lat=${lat}&lng=${lng}`
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+    
+                                statusText.textContent = "Lokasi Berhasil diperbarui"
+                                if (map == null) {
+                                    map = L.map("mapContainer").setView([lat, lng], 16);
+    
+                                    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                                        maxZoom: 23,
+                                        attribution: "Tes",
+                                    }).addTo(map);
+                                    marker = L.marker([lat, lng]).addTo(map)
+                                } else {
+                                    map.setView([lat, lng], 16)
+                                    marker.setLatLng([lat, lng])
+                                }
+                                setTimeout(() => { map.invalidateSize(); }, 100);
                             } else {
-                                map.setView([lat, lng], 16)
-                                marker.setLatLng([lat, lng])
+                                alert(`Gagal ${data.message}`)
                             }
-                            setTimeout(() => { map.invalidateSize(); }, 100);
-                        } else {
-                            alert(`Gagal ${data.message}`)
-                        }
-                    })
-                    .catch(error => {
-                        statusText.textContent = `Terjadi Kesalahan ${error}`
-                    })
+                        })
+                        .catch(error => {
+                            statusText.textContent = `Terjadi Kesalahan ${error}`
+                        })
+                }, 5000)
             })
         })
     </script>   

@@ -18,7 +18,7 @@ class Pembeli_model extends CI_Model {
 
     public function getOnePembeli($id)
     {
-        $this->db->select("id, nama, ST_X(location) as latitude, ST_Y(location) as longitude");
+        $this->db->select("id, name, ST_X(location) as longitude, ST_Y(location) as latitude");
         $this->db->from('pembeli');
         $this->db->where('id', $id);
         $query = $this->db->get();
@@ -27,10 +27,11 @@ class Pembeli_model extends CI_Model {
     }
 
     public function updateLocation($id, $latitude, $longitude)
-    {   
-        $this->db->set('location', "ST_GeomFromText('POINT($longitude $latitude)', 4326)", FALSE);
+    {    
+        $location = "ST_GeomFromText('POINT($latitude $longitude)', 4326)";
+        $this->db->set('location', $location, FALSE);
         $this->db->where('id', $id);
-        $query = $this->db->update('pembeli');
+        return $this->db->update('pembeli');
     }
 
     public function getPenjualRadius($id, $radius = 3000)
@@ -44,8 +45,8 @@ class Pembeli_model extends CI_Model {
         $user_lat = $user['latitude'];
         $user_lng = $user['longitude'];
 
-        $this->db->select("id, nama,
-        ST_X(location) as latitude, ST_Y(location) as longitude, ST_Distance_Sphere(location, ST_GeomFromText('POINT($user_lat $user_lng)', 4326)) as jarak_meter", FALSE);
+        $this->db->select("id, name,
+        ST_X(location) as longitude, ST_Y(location) as latitude, ST_Distance_Sphere(location, ST_GeomFromText('POINT($user_lng $user_lat)', 4326)) as jarak_meter", FALSE);
 
         $this->db->from('penjual');
 

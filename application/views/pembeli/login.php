@@ -23,7 +23,7 @@
 
       <form action="<?php echo site_url('Pembeli/login') ?>" method="POST">
         <div class="input-group mb-3">
-          <input type="email" name="email" class="form-control" placeholder="email" required value="<?php echo set_value('email') ?>">
+          <input type="email" name="email" class="form-control" placeholder="email" value="<?php echo set_value('email') ?>">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -32,7 +32,7 @@
         </div>
         <?php echo form_error('email','<small class="text-danger">', '</small>') ?>
         <div class="input-group mb-3">
-          <input type="password" name="password" class="form-control" placeholder="Password" required value="<?php echo set_value('password') ?>">
+          <input type="password" name="password" class="form-control" placeholder="Password"value="<?php echo set_value('password') ?>">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
