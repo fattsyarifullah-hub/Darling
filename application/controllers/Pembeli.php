@@ -11,34 +11,40 @@ class Pembeli extends CI_Controller
 
         $this->load->model('Pembeli_model');
 
-        if (!$this->ion_auth->logged_in()) {
-            if (strtolower((string) $this->router->fetch_method()) === 'synclocation') {
-                $this->output
-                    ->set_content_type('application/json')
-                    ->set_status_header(401)
-                    ->set_output(json_encode([
-                        'status' => 'error',
-                        'message' => 'Silakan login terlebih dahulu'
-                    ]));
-                exit;
-            }
-
-            redirect('auth/login', 'refresh');
         }
-    }
+        
+        
+        public function index()
+        {
+            if (!$this->ion_auth->logged_in()) {
+                if (strtolower((string) $this->router->fetch_method()) === 'synclocation') {
+                    $this->output
+                        ->set_content_type('application/json')
+                        ->set_status_header(401)
+                        ->set_output(json_encode([
+                            'status' => 'error',
+                            'message' => 'Silakan login terlebih dahulu'
+                        ]));
+                    exit;
+                }
 
-    public function index()
-    {
-        $id_user = $this->ion_auth->get_user_id();
-        $data['user'] = $this->Pembeli_model->getOneUser($id_user);
-        $this->load->view('pembeli/index', $data);
-    }
+                redirect('auth/login', 'refresh');
+                
+                }
+                
+                $id_user = $this->ion_auth->get_user_id();
+                $data['user'] = $this->Pembeli_model->getOneUser($id_user);
+                
+                $this->load->view('Pembeli/index', $data);
+
+        }
 
     public function register()
     {
-        $this->form_validation->set_rules('name', 'name', 'required');
+        $this->form_validation->set_rules('first_name', 'first_name', 'required');
+        $this->form_validation->set_rules('last_name', 'last_name', 'required');
         $this->form_validation->set_rules('email', 'email', 'required');
-        $this->form_validation->set_rules('no_hp', 'nomor hp', 'required');
+        $this->form_validation->set_rules('phone', 'nomor hp', 'required');
         $this->form_validation->set_rules('password', 'password', 'required');
 
         if ($this->form_validation->run() === FALSE) {
@@ -47,26 +53,20 @@ class Pembeli extends CI_Controller
             $hashPassword = password_hash($this->input->post('password', TRUE), PASSWORD_DEFAULT);
 
             $data = [
-                "name" => $this->input->post('name', TRUE),
+                "first_name" => $this->input->post('first_name', TRUE),
+                "last_name" => $this->input->post('last_name', TRUE),
                 "email" => $this->input->post('email', TRUE),
-                "no_hp" => $this->input->post('no_hp', TRUE),
+                "phone" => $this->input->post('phone', TRUE),
                 "password" => $hashPassword,
+                "active" => 1
             ];
 
             $this->Pembeli_model->register($data);
 
-            $user = $this->Pembeli_model->login($data['name']);
+            $id_user = $this->ion_auth->get_user_id();
+            $data['user'] = $this->Pembeli_model->getOneUser($id_user);
 
-            $data_session = array(
-                'id' => $user->id,
-                'logged_in' => TRUE
-            );
-
-            $this->session->set_userdata($data_session);
-
-            $this->session->set_flashdata('success', 'Berhasil membuat akun');
-
-            redirect('Pembeli/index');
+            $this->load->view('Pembeli/index', $data);
         }
     }
 

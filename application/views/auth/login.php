@@ -79,6 +79,8 @@
       <p class="mb-1 mt-3">
         <a href="<?php echo site_url('auth/forgot_password'); ?>"><?php echo lang('login_forgot_password'); ?></a>
       </p>
+
+      <a href="<?php echo site_url('pembeli/register') ?>">Register</a>
     </div>
     <!-- /.card-body -->
   </div>

@@ -1,9 +1,5 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
-<pre>
-    <?php print_r($status_jualan['active_selling']) ?>
-</pre>
-
     <a href=""
         class="brand-link">
 

@@ -24,14 +24,23 @@
 
       <form action="<?php echo site_url('Pembeli/register') ?>" method="POST">
         <div class="input-group mb-3">
-          <input type="text" name="name" class="form-control" placeholder="Nama lengkap" required value="<?php echo set_value('name') ?>">
+          <input type="text" name="first_name" class="form-control" placeholder="First Name" required value="<?php echo set_value('first_name') ?>">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>
             </div>
           </div>
         </div>
-        <?php echo form_error('name','<small class="text-danger">', '</small>') ?>
+        <?php echo form_error('first_name','<small class="text-danger">', '</small>') ?>
+        <div class="input-group mb-3">
+          <input type="text" name="last_name" class="form-control" placeholder="last Name" required value="<?php echo set_value('last_name') ?>">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+        </div>
+        <?php echo form_error('last_name','<small class="text-danger">', '</small>') ?>
         <div class="input-group mb-3">
           <input type="email" name="email" class="form-control" placeholder="Email" required value="<?php echo set_value('email') ?>">
           <div class="input-group-append">
@@ -42,14 +51,14 @@
         </div>
         <?php echo form_error('email','<small class="text-danger">', '</small>') ?>
         <div class="input-group mb-3">
-          <input type="number" name="no_hp" class="form-control" placeholder="Nomor HP" required value="<?php echo set_value('no_hp') ?>">
+          <input type="number" name="phone" class="form-control" placeholder="Nomor HP" required value="<?php echo set_value('phone') ?>">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
             </div>
           </div>
         </div>
-        <?php echo form_error('no_hp','<small class="text-danger">', '</small>') ?>
+        <?php echo form_error('phone','<small class="text-danger">', '</small>') ?>
         <div class="input-group mb-3">
           <input type="password" name="password" class="form-control" placeholder="Password" required value="<?php echo set_value('password') ?>">
           <div class="input-group-append">

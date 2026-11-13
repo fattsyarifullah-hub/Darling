@@ -12,8 +12,7 @@ class Pembeli_model extends CI_Model {
 
     public function register($data)
     {
-        $this->db->insert('pembeli', $data);
-        return;
+        return $this->db->insert('users', $data);
     }
 
     public function getOneUser($id)

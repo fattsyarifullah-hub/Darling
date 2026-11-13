@@ -219,6 +219,8 @@
 	
 		<?php if(in_array('penjual', $roles)) { ?>
 			<a href="<?php echo site_url('Penjual/index') ?>">ini button ke dashboard anda</a>
+		<?php } else { ?>
+			<a href="<?php echo site_url('Penjual/register') ?>">Daftar jadi penjual sekarang</a>
 		<?php } ?>
 
 	<div id="mapContainer" style="width: 100%; height: 400px">

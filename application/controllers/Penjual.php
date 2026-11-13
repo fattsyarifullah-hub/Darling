@@ -183,9 +183,15 @@ class Penjual extends CI_Controller
 
         $status_baru = ($penjual['active_selling'] == 1) ? 0 : 1;
 
-        $berhasil = $this->Penjual_model->ubah_status_jualan($id_user, $status_baru);
+        $this->Penjual_model->ubah_status_jualan($id_user, $status_baru);
 
         redirect('penjual/index');
     }
-    // LOGOUT
+
+    public function menu_dagangan()
+    {
+        $this->load->view('templates/header');
+        $this->load->view('penjual/menu_dagangan');
+        $this->load->view('templates/footer');
+    }
 }
