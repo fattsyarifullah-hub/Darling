@@ -96,16 +96,20 @@ class Pembeli_model extends CI_Model {
             users.id,
             users.username as nama_penjual,
             users.store_name,
-            users.description,
             users.phone,
+            users.template_text,
             ST_X(ul.location) as longitude,
             ST_Y(ul.location) as latitude,
-            ST_Distance_Sphere(ul.location, ST_GeomFromText('POINT({$p_lng} {$p_lat})', 4326)) as jarak_meter
-        ", FALSE);
+            ST_Distance_Sphere(ul.location, ST_GeomFromText('POINT({$p_lng} {$p_lat})', 4326)) as jarak_meter,
+            categories.type
+            ", FALSE);
 
         $this->db->from('users');
         $this->db->join('users_groups', 'users_groups.user_id = users.id');
         $this->db->join('groups', 'groups.id = users_groups.group_id');
+
+        $this->db->join('category_sellers', 'category_sellers.user_id = users.id');
+        $this->db->join('categories', 'categories.id = category_sellers.category_id');
 
         $this->db->join("($user) ul", 'ul.user_id = users.id');
 

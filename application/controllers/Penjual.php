@@ -22,6 +22,34 @@ class Penjual extends CI_Controller
         $data = [
             'user' => $id_user,
             'status_jualan' => $penjual,
+            'category' => $this->Penjual_model->get_category()
+        ];
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('penjual/index', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function updateCategory()
+    {   
+        $this->form_validation->set_rules('category_id', 'Jenis Kategori', 'required');
+
+
+        $category = [
+            'user_id' => $this->ion_auth->get_user_id(),
+            'category_id' => $this->input->post('category_id')
+        ];
+
+        $this->Penjual_model->update_category($category);
+
+        $id_user = $this->ion_auth->get_user_id();
+
+        $penjual = $this->Penjual_model->get_status_jualan($id_user);
+
+        $data = [
+            'user' => $id_user,
+            'status_jualan' => $penjual,
+            'category' => $this->Penjual_model->get_category()
         ];
 
         $this->load->view('templates/header', $data);
@@ -70,89 +98,44 @@ class Penjual extends CI_Controller
 
     public function register()
     {
-        $this->load->view('penjual/register');
-    }
+        $id_user = $this->ion_auth->get_user_id();
 
-    // REGISTER
-    public function proses_register()
-    {
-        if ($this->input->method() === 'post') {
+        if ($this->ion_auth->in_group('penjual', $id_user)) {
 
-            $this->form_validation->set_rules('first_name', 'Nama Penjual', 'required');
-            $this->form_validation->set_rules('store_name', 'Nama Toko', 'required');
-            $this->form_validation->set_rules('phone', 'Nomor HP', 'required|is_unique[users.phone]');
-            $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[users.email]');
-            $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
+            redirect('penjual/index');
+        }
 
-            if ($this->form_validation->run() == FALSE) {
-                $this->load->view('penjual/register');
-            } else {
 
-                $data = array(
-                    'first_name' => $this->input->post('first_name', TRUE),
-                    'store_name' => $this->input->post('store_name', TRUE),
-                    'phone'      => $this->input->post('phone', TRUE),
-                    'email'      => $this->input->post('email', TRUE),
-                    'password'   => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+        $this->form_validation->set_rules('store_name', 'Nama Toko', 'required');
+        $this->form_validation->set_rules('phone', 'Nomor Handphone', 'required');
 
-                    'ip_address' => $this->input->ip_address(),
-                    'created_on' => time(),
-                    'active'     => 1
-                );
-
-                $this->db->insert('users', $data);
-
-                redirect('penjual/login');
-            }
+        if ($this->form_validation->run() === FALSE) {
+            $this->load->view('penjual/register');
         } else {
-            redirect('penjual/register');
+
+            if(empty($id_user))
+                {
+                    redirect('pembeli/index');
+                }
+                
+            $data = [
+                'store_name' => $this->input->post('store_name', TRUE),
+                'phone' => $this->input->post('phone', TRUE)
+            ];
+
+            $this->Penjual_model->registerPedagang($id_user, $data);
+
+            $penjual = [
+                'user' => $id_user,
+                'status_jualan' => $this->Penjual_model->get_status_jualan($id_user),
+            ];
+
+            $this->load->view('templates/header', $penjual);
+            $this->load->view('penjual/index', $penjual);
+            $this->load->view('templates/footer');
         }
-
-        // Tampilan registrasi
-        $this->load->view('penjual/register');
     }
 
-    // DATA DAGANGAN
-    public function data_dagangan()
-    {
-        // if (!$this->session->userdata('login')) {
-        //     redirect('penjual/login');
-        //     return;
-        // }
-
-        $this->load->view('templates/header');
-        $this->load->view('penjual/data_dagangan');
-        $this->load->view('templates/footer');
-    }
-
-    // TAMBAH MENU
-    public function tambah_menu()
-    {
-        // if (!$this->session->userdata('login')) {
-        //     redirect('penjual/login');
-        //     return;
-        // }
-
-        if ($this->input->method() !== 'post') {
-            redirect('penjual/menu_dagangan');
-            return;
-        }
-
-        // Fitur tambah menu belum dihubungkan ke database.
-        redirect('penjual/menu_dagangan');
-    }
-
-    // HAPUS MENU
-    public function hapus_menu($id = NULL)
-    {
-        // if (!$this->session->userdata('login')) {
-        //     redirect('penjual/login');
-        //     return;
-        // }
-
-        // Fitur hapus menu belum dihubungkan ke database.
-        redirect('penjual/menu_dagangan');
-    }
 
     // UBAH STATUS JUALAN
     public function ubah_status()
@@ -188,10 +171,16 @@ class Penjual extends CI_Controller
         redirect('penjual/index');
     }
 
-    public function menu_dagangan()
+    public function simpan_template()
     {
-        $this->load->view('templates/header');
-        $this->load->view('penjual/menu_dagangan');
-        $this->load->view('templates/footer');
+        $id       = $this->ion_auth->user()->row()->id;
+        $template = trim($this->input->post('template_text', TRUE));
+
+        if ($template !== '') {
+            $this->Penjual_model->update_template($id, $template);
+            $this->session->set_flashdata('pesan', 'Template pesan berhasil disimpan.');
+        }
+
+        redirect('penjual');
     }
 }

@@ -18,18 +18,6 @@
 					</div>
 				</div>
 
-				<!-- SidebarSearch Form -->
-				<div class="form-inline">
-					<div class="input-group" data-widget="sidebar-search">
-						<input class="form-control form-control-sidebar" type="search" placeholder="Cari menu..." aria-label="Search">
-						<div class="input-group-append">
-							<button class="btn btn-sidebar">
-								<i class="fas fa-search fa-fw"></i>
-							</button>
-						</div>
-					</div>
-				</div>
-
 				<!-- Sidebar Menu -->
 				<nav class="mt-2">
 					<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -112,25 +100,18 @@
 								<div class="card-header">
 									<h3 class="card-title">Tambah Kategori Baru</h3>
 								</div>
-								<form onsubmit="event.preventDefault(); alert('Simulasi: Kategori jajanan baru berhasil ditambahkan!');">
+								<form action="<?php echo site_url('Admin/kategori') ?>" method="POST">
 									<div class="card-body">
 										<div class="form-group">
 											<label>Nama Kategori</label>
-											<input type="text" class="form-control" placeholder="Contoh: Makanan Berat, Minuman" required>
+											<input type="text" class="form-control" placeholder="Contoh: Makanan Berat, Minuman" value="<?php echo set_value('type') ?>" name="type">
 										</div>
+										<?php echo form_error('type','<small class="text-danger">', '</small>') ?>
 										<div class="form-group">
-											<label>Deskripsi Singkat</label>
-											<textarea class="form-control" rows="2" placeholder="Contoh: Bakso, Mie Ayam, Soto, Nasi Goreng"></textarea>
+											<label>Warna Marker</label>
+											<input type="color" class="form-control" value="<?php echo set_value('colour_marker') ?>" name="colour_marker">
 										</div>
-										<div class="form-group">
-											<label>Warna Pin / Marker di Peta</label>
-											<select class="form-control">
-												<option value="merah">Merah (Makanan Berat)</option>
-												<option value="biru">Biru (Minuman Segar)</option>
-												<option value="kuning">Kuning (Jajanan Ringan / Gorengan)</option>
-												<option value="hijau">Hijau (Kue Tradisional / Roti)</option>
-											</select>
-										</div>
+										<?php echo form_error('colour_marker','<small class="text-danger">', '</small>') ?>
 									</div>
 									<div class="card-footer">
 										<button type="submit" class="btn btn-warning btn-block">
@@ -153,73 +134,19 @@
 											<tr>
 												<th>No</th>
 												<th>Nama Kategori</th>
-												<th>Contoh Jajanan</th>
-												<th>Warna Pin Peta</th>
-												<th>Jumlah Mitra</th>
-												<th>Aksi</th>
+												<th>Warna Marker</th>
 											</tr>
 										</thead>
 										<tbody>
-											<tr>
-												<td>1</td>
-												<td><b>Makanan Berat</b></td>
-												<td>Bakso, Mie Ayam, Bubur Ayam, Soto</td>
-												<td><span class="badge badge-danger"><i class="fas fa-map-pin mr-1"></i> Pin Merah</span></td>
-												<td>18 Pedagang</td>
-												<td>
-													<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-edit-kategori">
-														<i class="fas fa-edit"></i> Edit
-													</button>
-													<button type="button" class="btn btn-danger btn-xs" onclick="alert('Simulasi: Kategori dihapus!')">
-														<i class="fas fa-trash"></i> Hapus
-													</button>
-												</td>
-											</tr>
-											<tr>
-												<td>2</td>
-												<td><b>Minuman Segar</b></td>
-												<td>Es Doger, Es Cendol, Es Teh, Kopi Keliling</td>
-												<td><span class="badge badge-primary"><i class="fas fa-map-pin mr-1"></i> Pin Biru</span></td>
-												<td>12 Pedagang</td>
-												<td>
-													<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-edit-kategori">
-														<i class="fas fa-edit"></i> Edit
-													</button>
-													<button type="button" class="btn btn-danger btn-xs" onclick="alert('Simulasi: Kategori dihapus!')">
-														<i class="fas fa-trash"></i> Hapus
-													</button>
-												</td>
-											</tr>
-											<tr>
-												<td>3</td>
-												<td><b>Jajanan Ringan</b></td>
-												<td>Siomay, Batagor, Cilok, Cimol, Tahu Bulat</td>
-												<td><span class="badge badge-warning"><i class="fas fa-map-pin mr-1"></i> Pin Kuning</span></td>
-												<td>9 Pedagang</td>
-												<td>
-													<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-edit-kategori">
-														<i class="fas fa-edit"></i> Edit
-													</button>
-													<button type="button" class="btn btn-danger btn-xs" onclick="alert('Simulasi: Kategori dihapus!')">
-														<i class="fas fa-trash"></i> Hapus
-													</button>
-												</td>
-											</tr>
-											<tr>
-												<td>4</td>
-												<td><b>Kue & Roti</b></td>
-												<td>Sari Roti, Kue Putu, Kue Ape, Martabak Mini</td>
-												<td><span class="badge badge-success"><i class="fas fa-map-pin mr-1"></i> Pin Hijau</span></td>
-												<td>5 Pedagang</td>
-												<td>
-													<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-edit-kategori">
-														<i class="fas fa-edit"></i> Edit
-													</button>
-													<button type="button" class="btn btn-danger btn-xs" onclick="alert('Simulasi: Kategori dihapus!')">
-														<i class="fas fa-trash"></i> Hapus
-													</button>
-												</td>
-											</tr>
+											<?php $no = 1;
+											foreach ($allCategory as $data) : ?>
+												<tr>
+													<td><?php echo $no ?></td>
+													<td><?php echo $data['type'] ?></td>
+													<td><?php echo $data['colour_marker'] ?></td>
+												</tr>
+											<?php $no++;
+											endforeach ?>
 										</tbody>
 									</table>
 								</div>
@@ -231,49 +158,6 @@
 			<!-- /.content -->
 		</div>
 		<!-- /.content-wrapper -->
-
-		<!-- ========================================================================= -->
-		<!-- MODAL POP-UP EDIT KATEGORI                                                -->
-		<!-- ========================================================================= -->
-		<!-- ========================================================================= -->
-		<!-- MODAL POP-UP EDIT KATEGORI                                                -->
-		<!-- ========================================================================= -->
-		<div class="modal fade" id="modal-edit-kategori">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header bg-warning">
-						<h4 class="modal-title">Edit Kategori Jajanan</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<div class="form-group">
-							<label>Nama Kategori</label>
-							<input type="text" class="form-control" value="Makanan Berat">
-						</div>
-						<div class="form-group">
-							<label>Contoh Jajanan</label>
-							<textarea class="form-control" rows="2">Bakso, Mie Ayam, Bubur Ayam, Soto</textarea>
-						</div>
-						<div class="form-group">
-							<label>Warna Pin / Marker di Peta</label>
-							<select class="form-control">
-								<option selected>Merah (Makanan Berat)</option>
-								<option>Biru (Minuman Segar)</option>
-								<option>Kuning (Jajanan Ringan)</option>
-								<option>Hijau (Kue Tradisional)</option>
-							</select>
-						</div>
-					</div>
-					<div class="modal-footer justify-content-between">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-						<button type="button" class="btn btn-warning" data-dismiss="modal" onclick="alert('Simulasi: Perubahan kategori berhasil disimpan!')">Simpan Perubahan</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
 		<!-- Control Sidebar -->
 		<aside class="control-sidebar control-sidebar-dark">
 			<!-- Control sidebar content goes here -->

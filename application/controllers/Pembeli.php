@@ -38,6 +38,12 @@ class Pembeli extends CI_Controller
 
     public function register()
     {
+        if ($this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('pembeli/index', 'refresh');
+		}
+
         $this->form_validation->set_rules('first_name', 'first_name', 'required');
         $this->form_validation->set_rules('last_name', 'last_name', 'required');
         $this->form_validation->set_rules('email', 'email', 'required');
@@ -45,7 +51,7 @@ class Pembeli extends CI_Controller
         $this->form_validation->set_rules('password', 'password', 'required');
 
         if ($this->form_validation->run() === FALSE) {
-            $this->load->view('Pembeli/register');
+            $this->load->view('pembeli/register');
         } else {
             $hashPassword = password_hash($this->input->post('password', TRUE), PASSWORD_DEFAULT);
 
@@ -63,7 +69,7 @@ class Pembeli extends CI_Controller
             $id_user = $this->ion_auth->get_user_id();
             $data['user'] = $this->Pembeli_model->getOneUser($id_user);
 
-            $this->load->view('Pembeli/index', $data);
+            $this->load->view('pembeli/index', $data);
         }
     }
 

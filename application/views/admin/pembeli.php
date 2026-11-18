@@ -18,18 +18,6 @@
 					</div>
 				</div>
 
-				<!-- SidebarSearch Form -->
-				<div class="form-inline">
-					<div class="input-group" data-widget="sidebar-search">
-						<input class="form-control form-control-sidebar" type="search" placeholder="Cari menu..." aria-label="Search">
-						<div class="input-group-append">
-							<button class="btn btn-sidebar">
-								<i class="fas fa-search fa-fw"></i>
-							</button>
-						</div>
-					</div>
-				</div>
-
 				<!-- Sidebar Menu -->
 				<nav class="mt-2">
 					<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -131,65 +119,19 @@
 												<th>Nama Lengkap</th>
 												<th>Email</th>
 												<th>No. Handphone</th>
-												<th>Tanggal Bergabung</th>
-												<th>Status Akun</th>
-												<th>Aksi</th>
 											</tr>
 										</thead>
 										<tbody>
+											<?php $no = 1; 
+											foreach ($allUsers as $data) : ?>
 											<!-- Data Dummy 1 -->
 											<tr>
-												<td>1</td>
-												<td>Rina Melati</td>
-												<td>rina.melati@gmail.com</td>
-												<td>0812-8899-0011</td>
-												<td>12 Okt 2026</td>
-												<td><span class="badge badge-success">Aktif</span></td>
-												<td>
-													<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-detail-pembeli">
-														<i class="fas fa-eye"></i> Detail
-													</button>
-													<button type="button" class="btn btn-danger btn-xs" onclick="alert('Simulasi: Akun pembeli Rina Melati berhasil diblokir!')">
-														<i class="fas fa-user-slash"></i> Blokir
-													</button>
-												</td>
+												<td><?php echo $no ?></td>
+												<td><?php echo $data['first_name'] . ' ' . $data['last_name']  ?></td>
+												<td><?php echo $data['email'] ?></td>
+												<td><?php echo $data['phone'] ?></td>
 											</tr>
-
-											<!-- Data Dummy 2 -->
-											<tr>
-												<td>2</td>
-												<td>Dimas Pratama</td>
-												<td>dimas.pratama99@yahoo.com</td>
-												<td>0856-7744-2233</td>
-												<td>25 Okt 2026</td>
-												<td><span class="badge badge-success">Aktif</span></td>
-												<td>
-													<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-detail-pembeli">
-														<i class="fas fa-eye"></i> Detail
-													</button>
-													<button type="button" class="btn btn-danger btn-xs" onclick="alert('Simulasi: Akun pembeli Dimas Pratama berhasil diblokir!')">
-														<i class="fas fa-user-slash"></i> Blokir
-													</button>
-												</td>
-											</tr>
-
-											<!-- Data Dummy 3 -->
-											<tr>
-												<td>3</td>
-												<td>Fajar Nugraha</td>
-												<td>fajar.nugraha@gmail.com</td>
-												<td>0813-5566-7788</td>
-												<td>02 Nov 2026</td>
-												<td><span class="badge badge-danger">Diblokir</span></td>
-												<td>
-													<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-detail-pembeli">
-														<i class="fas fa-eye"></i> Detail
-													</button>
-													<button type="button" class="btn btn-success btn-xs" onclick="alert('Simulasi: Pemblokiran akun Fajar Nugraha telah dibuka!')">
-														<i class="fas fa-check"></i> Aktifkan
-													</button>
-												</td>
-											</tr>
+											<?php $no++; endforeach ?>
 										</tbody>
 									</table>
 								</div>
@@ -232,7 +174,7 @@
 					<div class="modal-body">
 						<ul class="list-group list-group-unbordered mb-3">
 							<li class="list-group-item">
-								<b>Nama Pengguna</b> <a class="float-right">Rina Melati</a>
+								<b>Nama Pengguna</b> <a class="float-right"></a>
 							</li>
 							<li class="list-group-item">
 								<b>Alamat Utama</b> <a class="float-right">Perumahan GDC Sektor Melati, Depok</a>

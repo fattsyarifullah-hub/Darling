@@ -18,18 +18,6 @@
 					</div>
 				</div>
 
-				<!-- SidebarSearch Form -->
-				<div class="form-inline">
-					<div class="input-group" data-widget="sidebar-search">
-						<input class="form-control form-control-sidebar" type="search" placeholder="Cari menu..." aria-label="Search">
-						<div class="input-group-append">
-							<button class="btn btn-sidebar">
-								<i class="fas fa-search fa-fw"></i>
-							</button>
-						</div>
-					</div>
-				</div>
-
 				<!-- Sidebar Menu -->
 				<nav class="mt-2">
 					<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -112,7 +100,7 @@
 							<!-- small box -->
 							<div class="small-box bg-warning">
 								<div class="inner">
-									<h3>44</h3>
+									<h3><?php echo $countPedagang ?></h3>
 									<p>Total Mitra Pedagang</p>
 								</div>
 								<div class="icon">
@@ -126,7 +114,7 @@
 							<!-- small box -->
 							<div class="small-box bg-success">
 								<div class="inner">
-									<h3>18</h3>
+									<h3><?php echo $countActivePedagang ?></h3>
 									<p>Pedagang Online (GPS Aktif)</p>
 								</div>
 								<div class="icon">
@@ -140,7 +128,7 @@
 							<!-- small box -->
 							<div class="small-box bg-info">
 								<div class="inner">
-									<h3>152</h3>
+									<h3><?php echo $countAll ?></h3>
 									<p>Pembeli Terdaftar</p>
 								</div>
 								<div class="icon">
@@ -150,19 +138,6 @@
 							</div>
 						</div>
 
-						<div class="col-lg-3 col-6">
-							<!-- small box -->
-							<div class="small-box bg-danger">
-								<div class="inner">
-									<h3>3</h3>
-									<p>Laporan Keluhan Baru</p>
-								</div>
-								<div class="icon">
-									<i class="fas fa-exclamation-circle"></i>
-								</div>
-								<a href="<?php echo site_url('admin/laporan'); ?>" class="small-box-footer">Periksa Aduan <i class="fas fa-arrow-circle-right"></i></a>
-							</div>
-						</div>
 					</div>
 					<!-- /.row -->
 
@@ -178,22 +153,15 @@
 									</h3>
 									<!-- card tools -->
 									<div class="card-tools">
-										<span class="badge badge-success mr-2"><i class="fas fa-circle text-xs"></i> 18 Aktif</span>
+										<span class="badge badge-success mr-2"><i class="fas fa-circle text-xs"></i> <?php echo $countActivePedagang ?> Aktif </span>
 										<button type="button" class="btn btn-primary btn-sm" data-card-widget="collapse" title="Collapse">
 											<i class="fas fa-minus"></i>
 										</button>
 									</div>
 									<!-- /.card-tools -->
 								</div>
-								<div class="card-body p-0">
-									<iframe
-										src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.6567528007386!2d106.82577201125315!3d-6.43811039352605!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69eb1403c4f39f%3A0xc4fae7de4f7e2f4!2sKurma%20Media!5e0!3m2!1sid!2sid!4v1794365537091!5m2!1sid!2sid"
-										class="w-100"
-										height="360"
-										style="border:0; display:block;"
-										allowfullscreen=""
-										loading="lazy">
-									</iframe>
+								<div class="card-body p-0" id="map" style="width: 100%; height: 400px">
+
 								</div>
 								<!-- /.card-body-->
 								<div class="card-footer bg-transparent">
@@ -282,3 +250,60 @@
 		<!-- /.content-wrapper -->
 
 		<!-- Control Sidebar -->
+		<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+		<script>
+		const map = L.map('map').setView([-6.438095918337525, 106.82835283756185], 12);
+
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+		const penjualMarker = L.layerGroup().addTo(map);
+
+		fetch('<?php echo site_url("admin/locationActive") ?>', {
+				method: 'GET',
+				headers: { 'X-Requested-With': 'XMLHttpRequest'}
+			})
+			.then(response => response.json())
+			.then(res => {
+				console.log(res)
+				if (res.status === 'success') {
+					const penjualArray = res.data
+
+					if (!penjualMarker) {
+							if (map !== null) {
+								penjualMarker = L.layerGroup().addTo(map);
+							} else {
+								return; // Hentikan jika peta belum siap
+							}
+						} else {
+							penjualMarker.clearLayers();
+						}
+
+					penjualArray.forEach(penjual => {
+						const lng = parseFloat(penjual.longitude)
+						const lat = parseFloat(penjual.latitude)
+						const namaToko = penjual.store_name || penjual.nama_penjual
+						const phone = penjual.phone || "-"
+
+						let wa = phone.replace(/\D/g, '')
+						if (wa.startsWith('0')) {
+							wa = '62' + wa.substr(1)
+						}
+
+						const popupContent = `
+                            <div style="min-width: 180px;">
+                                <h3 style="margin: 0 0 5px 0; font-size: 16px; color: #1f2937;">${namaToko}</h3>
+                                <p style="margin: 0 0 4px 0; font-size: 13px; color: #6b7280;"><b>Nomor:</b> ${phone}</p>
+                            </div>
+                        `;
+
+						const sellerMarker = L.marker([lat, lng]).bindPopup(popupContent);
+                        penjualMarker.addLayer(sellerMarker);
+					})
+				}
+			})
+			.catch(error => {
+				console.error('Gagal Memuat data Penjual terdekat: ', error)
+			})
+		</script>
